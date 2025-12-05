@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聲聲不息探索旅程系統</title>
+    <!-- 引入 Google Fonts (可愛圓體) -->
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+    <!-- 引入 Font Awesome 圖示庫 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --sky-blue: #87CEEB;
+            --cloud-white: #F0F8FF;
+            --grass-green: #78C955;
+            --sun-yellow: #FFD700;
+            --text-dark: #4A4A4A;
+            --primary-accent: #FF6B6B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Zen Maru Gothic', 'Varela Round', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(180deg, var(--sky-blue) 0%, #E0F7FA 60%, var(--grass-green) 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 背景裝飾：雲朵 */
+        .cloud {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.8);
+            z-index: 0;
+            animation: floatCloud 20s linear infinite;
+        }
+        .c1 { top: 5%; left: 10%; font-size: 3rem; animation-duration: 25s; }
+        .c2 { top: 15%; left: 80%; font-size: 4rem; animation-duration: 35s; }
+        .c3 { top: 10%; left: 40%; font-size: 2.5rem; animation-duration: 28s; }
+
+        @keyframes floatCloud {
+            from { transform: translateX(0); }
+            to { transform: translateX(100vw); }
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 3rem 1rem;
+            z-index: 10;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 2px 2px 0px #4facfe;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        h1 i { color: var(--sun-yellow); }
+
+        .teacher-badge {
+            background-color: #fff;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            color: #555;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* Main Grid */
+        main {
+            flex: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        /* 卡片設計 - 拍立得/明信片風格 */
+        .class-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            transition: transform 0.3s;
+            border-top: 5px solid var(--primary-accent);
+        }
+
+        .class-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #eee;
+            padding-bottom: 10px;
+        }
+
+        .card-header i {
+            font-size: 1.8rem;
+            margin-right: 10px;
+            color: var(--grass-green);
+        }
+
+        .class-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* 按鈕樣式 */
+        .btn {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #555;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn i { font-size: 1.2rem; margin-bottom: 2px; }
+
+        .btn:hover {
+            background-color: var(--primary-accent);
+            color: white;
+            border-color: var(--primary-accent);
+            box-shadow: 0 5px 10px rgba(255, 107, 107, 0.3);
+        }
+
+        /* 分組顏色微調 */
+        .btn.group-A:hover { background-color: #4ECDC4; border-color: #4ECDC4; }
+        .btn.group-B:hover { background-color: #FF6B6B; border-color: #FF6B6B; }
+        .btn.group-C:hover { background-color: #FFE66D; border-color: #FFE66D; color: #555; }
+        .btn.group-D:hover { background-color: #1A535C; border-color: #1A535C; }
+
+        /* 模態框 (Password Modal) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            color: var(--primary-accent);
+            margin-bottom: 1rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+        }
+
+        .modal-input:focus {
+            border-color: var(--sky-blue);
+        }
+
+        .modal-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+
+        .btn-confirm { background-color: var(--grass-green); color: white; }
+        .btn-cancel { background-color: #eee; color: #555; }
+        .modal-btn:active { transform: scale(0.95); }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; flex-direction: column; }
+            .class-card { margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 裝飾雲 -->
+    <i class="fa-solid fa-cloud cloud c1"></i>
+    <i class="fa-solid fa-cloud cloud c2"></i>
+    <i class="fa-solid fa-cloud cloud c3"></i>
+
+    <header>
+        <h1><i class="fa-solid fa-campground"></i> 聲聲不息 <i class="fa-solid fa-sun"></i></h1>
+        <div class="teacher-badge">
+            <i class="fa-solid fa-chalkboard-user"></i> 授課教師：新北市立雙溪高級中學　吳佳樺
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- 801 班 -->
+            <div class="class-card">
+                <div class="card-header">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <div class="class-title">801 探險隊</div>
+                </div>
+                <div class="link-grid">
+                    <div class="btn group-A" onclick="checkAuth('801', 'https://docs.google.com/document/d/1QwrJtuH80sR8BD1E01paNvUKrqpCMA2h_euVKcwj54U/edit?usp=sharing')">
+                        <i class="fa-solid fa-music"></i> A 組
+                    </div>
+                    <div class="btn group-B" onclick="checkAuth('801', 'https://docs.google.com/document/d/1qnpAyDJFaICcs2RAhGGBs1oFJ5TgZwytz1mTNUtkA9w/edit?usp=sharing')">
+                        <i class="fa-solid fa-microphone-lines"></i> B 組
+                    </div>
+                    <div class="btn group-C" onclick="checkAuth('801', 'https://docs.google.com/document/d/1kJ7cFcRmQV9-4BTYukDrGwPBLKmeOBqxXcSS0w_MLrw/edit?usp=sharing')">
+                        <i class="fa-solid fa-headphones"></i> C 組
+                    </div>
+                    <div class="btn group-D" onclick="checkAuth('801', 'https://docs.google.com/document/d/1Vtxz3VR_gVZ-WuaItUDBHT69Bo91I31yNY61sX-tR2M/edit?usp=sharing')">
+                        <i class="fa-solid fa-sliders"></i> D 組
+                    </div>
+                </div>
+            </div>
+
+            <!-- 802 班 -->
+            <div class="class-card">
+                <div class="card-header">
+                    <i class="fa-solid fa-binoculars"></i>
+                    <div class="class-title">802 探險隊</div>
+                </div>
+                <div class="link-grid">
+                    <div class="btn group-A" onclick="checkAuth('802', 'https://docs.google.com/document/d/1gr_nBLxcgILh4hK3FhFGylniKyF7BZdPxr65sjZQLdE/edit?usp=sharing')">
+                        <i class="fa-solid fa-music"></i> A 組
+                    </div>
+                    <div class="btn group-B" onclick="checkAuth('802', 'https://docs.google.com/document/d/1sw-rE2csLzm3wKea1LOheOBPJyihU54JHMCHyc_hSxc/edit?usp=sharing')">
+                        <i class="fa-solid fa-microphone-lines"></i> B 組
+                    </div>
+                    <div class="btn group-C" onclick="checkAuth('802', 'https://docs.google.com/document/d/1DN7hdFIvG-R4mnAqB0tvBgFMD2SKJ4Dk6g1bsJOAuoc/edit?usp=sharing')">
+                        <i class="fa-solid fa-headphones"></i> C 組
+                    </div>
+                    <div class="btn group-D" onclick="checkAuth('802', 'https://docs.google.com/document/d/10THSKIPclyvMQqSD0ed_xSUm7pLhf96u1CTRua8r3SE/edit?usp=sharing')">
+                        <i class="fa-solid fa-sliders"></i> D 組
+                    </div>
+                </div>
+            </div>
+
+            <!-- 803 班 -->
+            <div class="class-card">
+                <div class="card-header">
+                    <i class="fa-solid fa-compass"></i>
+                    <div class="class-title">803 探險隊</div>
+                </div>
+                <div class="link-grid">
+                    <div class="btn group-A" onclick="checkAuth('803', 'https://docs.google.com/document/d/1yIYFZ4vVAp2aWGQIYpkDmWxyCMwor-EPnNcYreO2slI/edit?usp=sharing')">
+                        <i class="fa-solid fa-music"></i> A 組
+                    </div>
+                    <div class="btn group-B" onclick="checkAuth('803', 'https://docs.google.com/document/d/1yaf6KzpTU_pCfOVkPnng_roWy1xHE62wg9nCiLtoJro/edit?usp=sharing')">
+                        <i class="fa-solid fa-microphone-lines"></i> B 組
+                    </div>
+                    <div class="btn group-C" onclick="checkAuth('803', 'https://docs.google.com/document/d/1QIge6j3oIZPLrVq32dctRvdrGkZJfcfS5-rVsnTMSPc/edit?usp=sharing')">
+                        <i class="fa-solid fa-headphones"></i> C 組
+                    </div>
+                    <div class="btn group-D" onclick="checkAuth('803', 'https://docs.google.com/document/d/1mC3p4F-gUAWfsEjTQ7gp0A0bUxO19zxsR2-mti4Ep_s/edit?usp=sharing')">
+                        <i class="fa-solid fa-sliders"></i> D 組
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 密碼輸入視窗 -->
+    <div id="passwordModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-icon"><i class="fa-solid fa-lock"></i></div>
+            <h3>通關密語</h3>
+            <p style="color:#777; font-size: 0.9rem; margin-top:5px;">請輸入該班級專屬密碼</p>
+            <input type="password" id="passInput" class="modal-input" placeholder="請在此輸入密碼" onkeypress="handleEnter(event)">
+            <div>
+                <button class="modal-btn btn-cancel" onclick="closeModal()">取消</button>
+                <button class="modal-btn btn-confirm" onclick="verifyPassword()">開啟</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Copyright <i class="fa-regular fa-copyright"></i> Liyuchiutiger Gongminshen
+    </footer>
+
+    <script>
+        // 儲存目前正在點擊的連結與班級
+        let currentLink = '';
+        let currentClass = '';
+
+        // 正確密碼表
+        const passwords = {
+            '801': '801gong',
+            '802': '802min',
+            '803': '803shen'
+        };
+
+        const modal = document.getElementById('passwordModal');
+        const inputField = document.getElementById('passInput');
+
+        // 開啟密碼視窗
+        function checkAuth(classId, url) {
+            currentClass = classId;
+            currentLink = url;
+            inputField.value = ''; // 清空輸入框
+            modal.style.display = 'flex';
+            inputField.focus();
+        }
+
+        // 關閉視窗
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // 驗證密碼
+        function verifyPassword() {
+            const inputVal = inputField.value.trim();
+            const correctPass = passwords[currentClass];
+
+            if (inputVal === correctPass) {
+                // 密碼正確
+                window.open(currentLink, '_blank');
+                closeModal();
+            } else {
+                // 密碼錯誤
+                alert('Oops! 密碼錯誤，請重新輸入！');
+                inputField.value = '';
+                inputField.focus();
+            }
+        }
+
+        // 支援按 Enter 鍵送出
+        function handleEnter(e) {
+            if (e.key === 'Enter') {
+                verifyPassword();
+            }
+        }
+
+        // 點擊背景關閉視窗
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
